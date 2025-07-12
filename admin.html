@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sistema Admin - Loja</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet" />
+    <style>
+        /* ==================== */
+        /* VARIÁVEIS GLOBAIS */
+        /* ==================== */
+        :root {
+            --azul-primario: #3b82f6;
+            --azul-escuro: #1d4ed8;
+            --vermelho: #ef4444;
+            --verde: #22c55e;
+            --amarelo: #f59e0b;
+            --cinza-claro: #f3f4f6;
+            --cinza-medio: #9ca3af;
+            --cinza-escuro: #374151;
+            --branco: #ffffff;
+            --preto: #111827;
+
+            --espaco-xs: 4px;
+            --espaco-sm: 8px;
+            --espaco-md: 16px;
+            --espaco-lg: 24px;
+            --espaco-xl: 32px;
+
+            --borda-radius-sm: 6px;
+            --borda-radius-md: 12px;
+            --borda-radius-lg: 20px;
+
+            --sombra-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+            --sombra-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+            --sombra-lg: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ==================== */
+        /* ESTILOS BASE */
+        /* ==================== */
+        body {
+            font-family: 'Fredoka', Arial, sans-serif;
+            background-color: var(--cinza-claro);
+            color: var(--preto);
+            margin: 0;
+            padding: var(--espaco-md);
+            line-height: 1.6;
+        }
+
+        /* ==================== */
+        /* CONTAINER PRINCIPAL */
+        /* ==================== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: var(--branco);
+            border-radius: var(--borda-radius-md);
+            box-shadow: var(--sombra-md);
+            overflow: hidden;
+        }
+
+        /* ==================== */
+        /* CABEÇALHO */
+        /* ==================== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--espaco-lg);
+            background: linear-gradient(135deg, var(--azul-primario), var(--azul-escuro));
+            color: var(--branco);
+            border-bottom: 2px solid var(--azul-escuro);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        /* ==================== */
+        /* ESTATÍSTICAS */
+        /* ==================== */
+        .stats-container {
+            padding: var(--espaco-lg);
+            background-color: #f9fafb;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--espaco-md);
+            padding: 4vw;
+        }
+
+        .stat-card {
+            background-color: var(--branco);
+            padding: var(--espaco-md);
+            border-radius: var(--borda-radius-md);
+            box-shadow: var(--sombra-sm);
+            border-left: 4px solid var(--azul-primario);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sombra-md);
+        }
+
+        .stat-card h3 {
+            color: var(--cinza-escuro);
+            font-size: 0.9rem;
+            margin-bottom: var(--espaco-xs);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--preto);
+        }
+
+        #btn-restestat {
+            margin: 0 4vw 4vw 4vw;
+        }
+
+        /* ==================== */
+        /* FORMULÁRIOS */
+        /* ==================== */
+        .form-section {
+            padding: var(--espaco-lg);
+            border-bottom: 1px solid var(--cinza-claro);
+            background: white;
+            margin-top: 5vw;
+            border-radius: 3vw;
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: var(--espaco-lg);
+            color: var(--azul-escuro);
+        }
+
+        .form-group {
+            margin-bottom: var(--espaco-md);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--espaco-xs);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--espaco-sm);
+            border: 1px solid var(--cinza-medio);
+            border-radius: var(--borda-radius-sm);
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--azul-primario);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .produto {
+            padding-top: 4vw;
+            margin-top: 5vw;
+            border-top: .5vw solid grey;
+        }
+
+        /* ==================== */
+        /* LISTA DE PEDIDOS */
+        /* ==================== */
+        .pedido {
+            padding: var(--espaco-md);
+            margin-bottom: var(--espaco-md);
+            border: 1px solid var(--cinza-claro);
+            border-radius: var(--borda-radius-sm);
+            background-color: var(--branco);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .pedido:hover {
+            box-shadow: var(--sombra-sm);
+        }
+
+        .pedido-confirmado {
+            border-left: 4px solid var(--verde);
+        }
+
+        .pedido-entregue {
+            border-left: 4px solid var(--azul-primario);
+            background-color: #f0f9ff;
+        }
+
+        /* ==================== */
+        /* LISTA DE PROMOÇÕES */
+        /* ==================== */
+        .promotions-list {
+            margin-top: var(--espaco-xl);
+        }
+
+        .promotion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--espaco-md);
+            margin-bottom: var(--espaco-sm);
+            background-color: var(--branco);
+            border: 1px solid var(--cinza-claro);
+            border-radius: var(--borda-radius-sm);
+            box-shadow: var(--sombra-sm);
+        }
+
+        .promotion-item:hover {
+            box-shadow: var(--sombra-md);
+        }
+
+        .promotion-info {
+            flex: 1;
+        }
+
+        /* ==================== */
+        /* BOTÕES */
+        /* ==================== */
+        .btn {
+            display: inline-block;
+            padding: var(--espaco-sm) var(--espaco-md);
+            border: none;
+            border-radius: var(--borda-radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--azul-primario);
+            color: var(--branco);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--azul-escuro);
+        }
+
+        .btn-danger {
+            background-color: var(--vermelho);
+            color: var(--branco);
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+
+        .btn-success {
+            background-color: var(--verde);
+            color: var(--branco);
+        }
+
+        .btn-success:hover {
+            background-color: #15803d;
+        }
+
+        .btn-warning {
+            background-color: var(--amarelo);
+            color: var(--branco);
+        }
+
+        .btn-warning:hover {
+            background-color: #c2410c;
+        }
+
+        /* ==================== */
+        /* RESPONSIVO */
+        /* ==================== */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: var(--espaco-md);
+                text-align: center;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .admin-panel {
+            padding: 4vw;
+            border-radius: 3vw;
+            background: white;
+            margin-top: 4vw;
+        }
+
+        input {
+            padding: 2vw;
+            border-radius: 2vw;
+            border: .1vw solid orange;
+            border-left: 1vw solid orange;
+            margin: 0;
+        }
+
+        textarea,
+        select {
+            padding: 2vw;
+            border-radius: 2vw;
+            border: .1vw solid orange;
+            border-left: 1vw solid orange;
+            margin: 1vw;
+        }
+
+        /* -- fechar forms -- */
+        #lab-promo,
+        #lab-cadastro,
+        #lab-produtosCad {
+            background: transparent;
+            position: relative;
+            border-radius: 2vw;
+            padding: 0;
+            z-index: 9;
+            margin: 3vw;
+            top: 2vw;
+            left: 3vw;
+            color: white;
+            position: absolute;
+        }
+
+        #lab-cadastro {
+            left: 18vw;
+        }
+
+        #lab-produtosCad {
+            left: 39vw;
+        }
+
+        #adminArea,
+        #check-promo,
+        #check-cadastro,
+        #formCad,
+        #check-produtosCad,
+        #prodCads,
+        #check-fecha {
+            display: none;
+        }
+
+        #formCad {
+            display: block;
+            position: absolute;
+            transform: translateX(-100vw);
+            z-index: 1000;
+        }
+
+        #check-promo:checked+#adminArea {
+            display: block;
+        }
+
+        #check-promo:checked~#lab-promo {
+            color: red;
+        }
+
+        #check-cadastro:checked~#formCad {
+            display: block;
+            position: relative;
+            transform: translateX(0);
+        }
+
+        #check-produtosCad:checked+#prodCads {
+            display: block;
+        }
+
+        #check-produtosCad:checked+#formProduto {
+            display: block;
+        }
+
+        #check-editaProd {
+            display: none;
+        }
+
+        #formAtualizaCad {
+            display: none;
+            position: absolute;
+            padding: 2vw;
+        }
+
+        #check-editaProd:checked~#formProduto {
+            display: block;
+            padding: 5vw;
+            background: white;
+            position: absolute;
+            top: -2vw;
+            left: 7vw;
+            width: 81vw;
+            margin: auto;
+            transform: translateX(93.5vw);
+        }
+
+        #lab-fecha {
+            padding: 2vw;
+            border-radius: 2vw;
+            text-align: center;
+            display: block;
+            background: lightgray;
+            font-size: 6vw;
+            line-height: 3.5vw;
+            width: 4vw;
+            height: 4vw;
+            right: -82vw;
+            top: 2vw;
+            position: relative;
+            z-index: 1000;
+        }
+
+        #h1-titulo {
+            background: transparent;
+            margin-top: 5vw;
+        }
+
+        /* Notificações */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .notification.success {
+            background-color: #48bb78;
+        }
+
+        .notification.error {
+            background-color: #f56565;
+        }
+
+        .notification.info {
+            background-color: #667eea;
+        }
+
+        .notification.warning {
+            background-color: #ed8936;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="h1-titulo">Sistema Administrativo</h1>
+            <div>
+                <span id="usuario">Carregando...</span>
+                <button id="logout" class="btn btn-danger">Sair</button>
+            </div>
+        </div>
+
+        <!-- Área do Admin -->
+        <label id="lab-fecha" class="lab-promo" for="check-fecha">x</label>
+        <input id="check-fecha" type="radio" name="muda" />
+
+        <label id="lab-promo" class="lab-promo" for="check-promo">Promo</label>
+        <input id="check-promo" type="radio" name="muda" />
+
+        <div id="adminArea" class="admin-area">
+            <div id="admin-Panel" class="admin-panel">
+                <h2>📊 Gerenciar Promoções</h2>
+                <form id="promotionForm">
+                    <div class="form-group">
+                        <label>Título da Promoção:</label>
+                        <input type="text" id="title" placeholder="Ex: Super Desconto de Verão" required maxlength="100" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descrição:</label>
+                        <textarea id="description" rows="3" placeholder="Descreva os detalhes da promoção" required maxlength="500"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preço/Desconto:</label>
+                        <input type="text" id="price" placeholder="Ex: 50% OFF ou R$ 29,90" required maxlength="50" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nome da Imagem:</label>
+                        <input type="text" id="imageName" placeholder="Ex: imagem1.jpg" required />
+                        <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                            A imagem deve estar na pasta "imagens/" do servidor
+                        </small>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-success">➕ Adicionar Promoção</button>
+                    </div>
+                </form>
+
+                <div class="promotions-list">
+                    <h3>📋 Promoções Cadastradas</h3>
+                    <div id="promotionsList">
+                        <div class="loading">Carregando...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de Produto -->
+        <label id="lab-cadastro" for="check-cadastro">Cadastrar </label>
+        <input id="check-cadastro" type="radio" name="muda" />
+
+        <div id="formCad" class="form-section">
+            <h2>Cadastrar Produto</h2>
+            <input type="radio" name="muda" id="check-editaProd" />
+
+            <form id="formProduto">
+                <div class="form-group">
+                    <label>Nome do Produto:</label>
+                    <input type="text" id="nomeProduto" required />
+                </div>
+                <div class="form-group">
+                    <label>Descrição:</label>
+                    <textarea id="descricaoProduto"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Categoria:</label>
+                    <select id="categoriaProduto" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="Lanches">Lanches</option>
+                        
+                        <option value="Pão bola">Pão bola</option>
+                        <option value="Crepioca">Crepioca</option>
+                        <option value="Tapioca">Tapioca</option>
+                    <option value="Cuscuz">Cuscuz</option>
+                        
+                        <option value="Hamburgueres">Hamburgueres</option>
+                        <option value="Sobremesas">Sobremesas</option>
+                        <option value="Bebidas">Babidas</option>
+                         <option value="Adicionais">Adicionais</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preço:</label>
+                    <input type="text" id="precoProduto" placeholder="Ex: 1,50 ou 1.50" required />
+                </div>
+                <div class="form-group">
+                    <label>Custo:</label>
+                    <input type="text" id="custoProduto" placeholder="Ex: 1,00 ou 1.00" />
+                </div>
+
+                <div class="form-group">
+                    <label>Imagens:</label>
+                    <div id="imagensContainer">
+                        <input type="text" class="imagemInput" placeholder="Nome da imagem (ex: produto1.jpg)" />
+                    </div>
+                    <button type="button" onclick="adicionarCampoImagem()" class="btn btn-primary">Adicionar Imagem</button>
+                </div>
+
+                <div class="form-group">
+                    <div id="adicionaisContainer">
+                        <h3>Adicionais</h3>
+                        <div class="adicional">
+                            <input type="text" class="adicionalNome" placeholder="Nome do adicional" />
+                            <input type="text" class="adicionalValor" placeholder="Valor do adicional (ex: 1,50)" />
+                            <input type="text" class="adicionalLucro" placeholder="Lucro do adicional (ex: 0,50)" />
+                        </div>
+                    </div>
+                    <button type="button" onclick="adicionarCampoAdicional()" class="btn btn-primary">Adicionar Adicional</button>
+                </div>
+
+                <button type="submit" class="btn btn-success">Cadastrar Produto</button>
+            </form>
+        </div>
+
+        <label id="lab-produtosCad" for="check-produtosCad">Produtos</label>
+        <input type="radio" name="muda" id="check-produtosCad" />
+
+        <!-- Lista de Produtos -->
+        <div id="prodCads" class="form-section">
+            <h2>Produtos Cadastrados</h2>
+            <div id="listaProdutos">Carregando produtos...</div>
+
+            <section id="formAtualizaCad" class=""></section>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Acumulado</h3>
+                <div class="stat-value" id="totalAcumulado">R$ 0,00</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Lucro</h3>
+                <div class="stat-value" id="totalLucro">R$ 0,00</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Vendas</h3>
+                <div class="stat-value" id="totalVendas">0</div>
+            </div>
+        </div>
+
+        <button id="btn-restestat" onclick="resetarEstatisticas()" class="btn btn-warning">Resetar Estatísticas</button>
+
+        <!-- Lista de Pedidos -->
+        <div class="form-section">
+            <h2>Pedidos Recebidos</h2>
+            <div id="listaPedidos">Carregando pedidos...</div>
+        </div>
+    </div>
+
+    <audio id="somNotificacao" src="notificacao.mp3" preload="auto"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+    <script>
+        const RESET_PASSWORD = 'apagar';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD7zUsB44wc3DPEMJ3tMeB2WxPkhICxzpQ",
+            authDomain: "loja-31f80.firebaseapp.com",
+            databaseURL: "https://loja-31f80-default-rtdb.firebaseio.com",
+            projectId: "loja-31f80",
+            storageBucket: "loja-31f80.appspot.com",
+            messagingSenderId: "10287886567",
+            appId: "1:10287886567:web:80131c6086c573689cb242"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+        const produtosRef = db.ref("produtos");
+        const pedidosRef = db.ref("pedidos");
+        const carteiraRef = db.ref("carteira");
+
+        const formProduto = document.getElementById('formProduto');
+        const listaProdutos = document.getElementById('listaProdutos');
+        const listaPedidos = document.getElementById('listaPedidos');
+        const totalAcumuladoEl = document.getElementById('totalAcumulado');
+        const totalLucroEl = document.getElementById('totalLucro');
+        const totalVendasEl = document.getElementById('totalVendas');
+
+        const somNotificacao = document.getElementById('somNotificacao');
+        let pedidosAnteriores = {};
+
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById('usuario').textContent = 'Logado como: ' + user.email;
+                initializeAdmin();
+            }
+        });
+
+        document.getElementById('logout').addEventListener('click', () => {
+            auth.signOut();
+        });
+
+        // Função para converter string com vírgula para float
+        function parsePreco(valorStr) {
+  if (!valorStr || valorStr === '') return 0;
+  if (typeof valorStr === 'number') return valorStr;
+  if (typeof valorStr !== 'string') return 0;
+  return parseFloat(valorStr.replace(',', '.')) || 0;
+}
+
+        function initializeAdmin() {
+            carteiraRef.once('value', snapshot => {
+                if (!snapshot.exists()) {
+                    carteiraRef.set({
+                        totalLucro: 0,
+                        totalVendas: 0,
+                        totalAcumulado: 0,
+                        ultimaAtualizacao: new Date().toISOString().split('T')[0]
+                    });
+                }
+            });
+
+            formProduto.onsubmit = e => {
+                e.preventDefault();
+                cadastrarProduto();
+            };
+
+            produtosRef.on('value', snapshot => {
+                listaProdutos.innerHTML = '';
+                const data = snapshot.val();
+
+                if (data) {
+                    Object.entries(data).forEach(([id, prod]) => {
+                        const div = document.createElement('div');
+                        div.className = 'produto';
+
+                        const lucroUnitario = (prod.preco || 0) - (prod.custo || 0);
+                        const imagensHTML = (prod.imagens || []).map(nome => `<img src="imagens/${nome}" style="width:80px; margin:5px;">`).join('');
+                        const adicionaisHTML = (prod.adicionais || []).map(adicional => `<p>${adicional.nome}: R$ ${parsePreco(adicional.valor).toFixed(2).replace('.', ',')}</p>`).join('');
+
+                        div.innerHTML = `
+                            <strong>${prod.nome}</strong> - R$ ${parsePreco(prod.preco).toFixed(2).replace('.', ',')}<br>
+                            <small>Categoria: ${prod.categoria || 'Sem categoria'}</small><br>
+                            ${prod.descricao || ''}<br>
+                            ${imagensHTML}<br>
+                            ${adicionaisHTML}
+                            <small>Custo: R$ ${parsePreco(prod.custo).toFixed(2).replace('.', ',')} | Lucro: R$ ${lucroUnitario.toFixed(2).replace('.', ',')}</small><br>
+                            <button onclick="excluirProduto('${id}')" class="btn btn-danger">Excluir</button>
+                            <button onclick="editarProduto('${id}')" class="btn btn-primary"> <label for="check-editaProd">Edita</label> </button>
+                        `;
+
+                        listaProdutos.appendChild(div);
+                    });
+                } else {
+                    listaProdutos.innerHTML = '<p>Nenhum produto cadastrado.</p>';
+                }
+            });
+
+            pedidosRef.on('value', snapshot => {
+                const data = snapshot.val() || {};
+                const novasChaves = Object.keys(data);
+                const chavesAntigas = Object.keys(pedidosAnteriores);
+                const chegouNovo = novasChaves.some(id => !chavesAntigas.includes(id));
+
+                pedidosAnteriores = data;
+
+                if (chegouNovo) {
+                    somNotificacao.play().catch(() => {
+                        console.warn("Som bloqueado. Clique na tela para ativar.");
+                    });
+                }
+
+                listaPedidos.innerHTML = '';
+                if (novasChaves.length > 0) {
+                    novasChaves.forEach(id => addPedido(data[id], id));
+                } else {
+                    listaPedidos.innerHTML = '<p>Nenhum pedido recebido.</p>';
+                }
+
+                atualizarEstatisticas();
+            });
+
+            atualizarEstatisticas();
+            setInterval(atualizarEstatisticas, 30000);
+        }
+
+        // ============== FUNÇÃO DE CADASTRO DE PRODUTO ==============
+        function cadastrarProduto() {
+            const nome = document.getElementById('nomeProduto').value.trim();
+            const descricao = document.getElementById('descricaoProduto').value.trim();
+            const categoria = document.getElementById('categoriaProduto').value;
+            const precoStr = document.getElementById('precoProduto').value.trim();
+            const custoStr = document.getElementById('custoProduto').value.trim();
+
+            const preco = parsePreco(precoStr);
+            const custo = parsePreco(custoStr);
+
+            const imagemInputs = document.querySelectorAll('.imagemInput');
+            const imagens = Array.from(imagemInputs)
+                .map(input => input.value.trim())
+                .filter(nome => nome);
+
+            const adicionalInputs = document.querySelectorAll('.adicional');
+            const adicionais = Array.from(adicionalInputs).map(adicional => {
+                const nome = adicional.querySelector('.adicionalNome').value.trim();
+                const valorStr = adicional.querySelector('.adicionalValor').value.trim();
+                const lucroAdicionalStr = adicional.querySelector('.adicionalLucro').value.trim();
+
+                return {
+                    nome,
+                    valor: parsePreco(valorStr),
+                    lucroAdicional: parsePreco(lucroAdicionalStr)
+                };
+            }).filter(adicional => adicional.nome);
+
+            if (!nome || isNaN(preco) || !categoria) {
+                alert("Preencha nome, preço e categoria corretamente.");
+                return;
+            }
+
+            produtosRef.push({ nome, descricao, categoria, preco, custo, imagens, adicionais })
+                .then(() => {
+                    formProduto.reset();
+                    document.getElementById('imagensContainer').innerHTML = `
+                        <input type="text" class="imagemInput" placeholder="Nome da imagem (ex: produto1.jpg)">
+                    `;
+                    document.getElementById('adicionaisContainer').innerHTML = `
+                        <h3>Adicionais</h3>
+                        <div class="adicional">
+                            <input type="text" class="adicionalNome" placeholder="Nome do adicional">
+                            <input type="text" class="adicionalValor" placeholder="Valor do adicional (ex: 1,50)">
+                            <input type="text" class="adicionalLucro" placeholder="Lucro do adicional (ex: 0,50)">
+                        </div>
+                    `;
+                    alert('Produto cadastrado com sucesso!');
+                })
+                .catch(err => alert("Erro ao salvar produto: " + err.message));
+        }
+
+        // ============== FUNÇÕES GLOBAIS ==============
+        function resetarEstatisticas() {
+            const senha = prompt('Digite a senha para resetar as estatísticas:');
+
+            if (senha === RESET_PASSWORD) {
+                if (confirm('⚠️ ATENÇÃO: Isso irá zerar todos os lucros, vendas e acumulado permanentemente. Tem certeza?')) {
+                    carteiraRef.set({
+                        totalLucro: 0,
+                        totalVendas: 0,
+                        totalAcumulado: 0,
+                        ultimaAtualizacao: new Date().toISOString().split('T')[0]
+                    }).then(() => {
+                        alert('✅ Estatísticas resetadas com sucesso!');
+                        atualizarEstatisticas();
+                    }).catch(err => {
+                        alert('❌ Erro ao resetar: ' + err.message);
+                    });
+                }
+            } else if (senha !== null) {
+                alert('❌ Senha incorreta!');
+            }
+        }
+
+        function atualizarEstatisticas() {
+            carteiraRef.once('value', snapshot => {
+                const carteira = snapshot.val() || {};
+
+                totalAcumuladoEl.textContent = `R$ ${(carteira.totalAcumulado || 0).toFixed(2).replace('.', ',')}`;
+                totalLucroEl.textContent = `R$ ${(carteira.totalLucro || 0).toFixed(2).replace('.', ',')}`;
+                totalVendasEl.textContent = carteira.totalVendas || 0;
+            });
+        }
+
+        function addPedido(pedido, chave) {
+            const div = document.createElement('div');
+            div.className = `pedido ${pedido.status ? 'pedido-' + pedido.status : ''}`;
+
+            // Garantir que carrinho seja sempre um array
+            let itens = [];
+            if (Array.isArray(pedido.carrinho)) {
+                itens = pedido.carrinho;
+            } else if (pedido.carrinho && typeof pedido.carrinho === 'object') {
+                itens = Object.values(pedido.carrinho);
+            }
+
+            const carrinhoHTML = itens.map(p => {
+                let adicionaisTexto = '';
+                if (Array.isArray(p.adicionais) && p.adicionais.length > 0) {
+                    adicionaisTexto = ` (Adicionais: ${p.adicionais.join(', ')})`;
+                } else if (typeof p.adicional === 'string' && p.adicional) {
+                    adicionaisTexto = ` (Adicional: ${p.adicional})`;
+                }
+                return `<li>${p.nome} x${p.qtd}${adicionaisTexto}</li>`;
+            }).join('');
+
+            let statusBadge = '';
+            let botoes = '';
+
+            switch (pedido.status) {
+                case 'confirmado':
+                    statusBadge = '<span class="status-badge status-confirmado">Confirmado</span>';
+                    botoes = `
+                    <button class="btn btn-success" onclick="marcarEntregue('${chave}', this)">Aguardando pagamento<br>Confirmar entrega</button>
+                    <button class="btn btn-danger" onclick="excluirPedido('${chave}', this)">Excluir</button>
+                `;
+                    break;
+                case 'entregue':
+                    statusBadge = '<span class="status-badge status-entregue">Entregue</span>';
+                    botoes = `<button class="btn btn-danger" onclick="excluirPedido('${chave}', this)">Excluir</button>`;
+                    break;
+                default:
+                    statusBadge = '<span class="status-badge status-pendente">Pendente</span>';
+                    botoes = `<button class="btn btn-primary" onclick="confirmarPedido('${chave}', '${pedido.cliente?.whatsapp || ''}', this)">Confirmar</button>`;
+            }
+
+            const lucroTotal = pedido.lucro ? `<p><strong>Lucro:</strong> R$ ${parsePreco(pedido.lucro).toFixed(2).replace('.', ',')}</p>` : '';
+
+            const observacoes = pedido.cliente?.observacoes ?
+                `<div class="observacoes">
+                <strong>📝 Observações:</strong><br>
+                ${pedido.cliente.observacoes}
+            </div>` : '';
+
+            div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <p><strong>Data:</strong> ${pedido.data || ''}</p>
+                ${statusBadge}
+            </div>
+            <p><strong>Nome:</strong> ${pedido.cliente?.nome || ''}</p>
+            <p><strong>WhatsApp:</strong> ${pedido.cliente?.whatsapp || ''}</p>
+            <p><strong>Endereço:</strong> ${pedido.cliente?.endereco || ''}</p>
+            <p><strong>Pagamento:</strong> ${pedido.cliente?.pagamento || ''}</p>
+            ${observacoes}
+            <ul>${carrinhoHTML}</ul>
+            <p><strong>Total:</strong> R$ ${parsePreco(pedido.total).toFixed(2).replace('.', ',')}</p>
+            ${lucroTotal}
+            <div style="margin-top: 15px;">
+                ${botoes}
+            </div>
+        `;
+            listaPedidos.appendChild(div);
+        }
+
+        function confirmarPedido(id, whatsapp, btn) {
+            pedidosRef.child(id).once("value", (snapshot) => {
+                const pedido = snapshot.val();
+                if (!pedido || !pedido.cliente) return;
+
+                const carrinho = pedido.carrinho;
+                if (!carrinho) return;
+
+                let lucroTotal = 0;
+
+                produtosRef.once("value", (snapshotProdutos) => {
+                    const produtos = snapshotProdutos.val();
+
+                    const itensCarrinho = Array.isArray(carrinho) ? carrinho : Object.values(carrinho);
+
+                    itensCarrinho.forEach(item => {
+                        const produto = Object.values(produtos || {}).find(p => p.nome === item.nome);
+                        if (!produto) return;
+
+                        const preco = parsePreco(produto.preco || 0);
+                        const custo = parsePreco(produto.custo || 0);
+                        const lucroUnitario = preco - custo;
+                        const qtd = parseInt(item.qtd || 0);
+                        const lucroProduto = lucroUnitario * qtd;
+
+                        // Correção do lucro dos adicionais
+                        let lucroAdicionais = 0;
+                        if (Array.isArray(item.adicionais)) {
+                            item.adicionais.forEach(adicionalSelecionado => {
+                                let nome = '';
+                                if (typeof adicionalSelecionado === 'string') {
+                                    nome = adicionalSelecionado;
+                                } else if (typeof adicionalSelecionado === 'object' && adicionalSelecionado !== null) {
+                                    nome = adicionalSelecionado.nome || '';
+                                }
+
+                                if (nome) {
+                                    const adicionalDoProduto = (produto.adicionais || []).find(a => a.nome === nome);
+                                    if (adicionalDoProduto) {
+                                        const lucro = parsePreco(adicionalDoProduto.lucroAdicional) || 0;
+                                        lucroAdicionais += lucro * (parseInt(item.qtd) || 1);
+                                    }
+                                }
+                            });
+                        }
+
+                        lucroTotal += lucroProduto + lucroAdicionais;
+                    });
+
+                    pedidosRef.child(id).update({
+                        lucro: lucroTotal.toFixed(2),
+                        status: "confirmado"
+                    }).then(() => {
+                        btn.innerText = "Confirmado";
+                        btn.disabled = true;
+
+                        // Mensagem do WhatsApp
+                        let mensagem = `Olá ${pedido.cliente.nome}, seu pedido foi confirmado.\n\n*Detalhes do Pedido:*\n`;
+                        mensagem += `*Data:* ${pedido.data || ''}\n`;
+                        mensagem += `*Nome:* ${pedido.cliente.nome || ''}\n`;
+                        mensagem += `*WhatsApp:* ${pedido.cliente.whatsapp || ''}\n`;
+                        mensagem += `*Endereço:* ${pedido.cliente.endereco || ''}\n`;
+                        mensagem += `*Pagamento:* ${pedido.cliente.pagamento || ''}\n`;
+                        mensagem += `*Itens:*\n`;
+
+                        itensCarrinho.forEach(item => {
+                            let adicionaisTexto = '';
+                            if (Array.isArray(item.adicionais)) {
+                                const nomes = item.adicionais.map(a => typeof a === 'string' ? a : a.nome).join(', ');
+                                adicionaisTexto = ` (Adicionais: ${nomes})`;
+                            }
+                            mensagem += `- ${item.nome} x${item.qtd}${adicionaisTexto}\n`;
+                        });
+
+                        mensagem += `\n*Total: R$ ${parsePreco(pedido.total).toFixed(2)}*`;
+                        window.open(`https://wa.me/55${whatsapp}?text=${encodeURIComponent(mensagem)}`, "_blank");
+                    });
+                });
+            });
+        }
+
+        function marcarEntregue(id, btn) {
+            pedidosRef.child(id).once('value', snapshot => {
+                const pedido = snapshot.val();
+                if (!pedido) return;
+
+                const lucro = parsePreco(pedido.lucro || 0);
+                const total = parsePreco(pedido.total || 0);
+
+                carteiraRef.once('value', carteiraSnapshot => {
+                    const carteira = carteiraSnapshot.val() || {};
+                    const novoLucroTotal = (carteira.totalLucro || 0) + lucro;
+                    const novoAcumuladoTotal = (carteira.totalAcumulado || 0) + total;
+                    const novasVendas = (carteira.totalVendas || 0) + 1;
+
+                    carteiraRef.update({
+                        totalLucro: novoLucroTotal,
+                        totalAcumulado: novoAcumuladoTotal,
+                        totalVendas: novasVendas,
+                        ultimaAtualizacao: new Date().toISOString().split('T')[0]
+                    });
+
+                    pedidosRef.child(id).update({ status: 'entregue' });
+                    btn.disabled = true;
+                    btn.innerText = "Entregue";
+
+                    setTimeout(() => {
+                        atualizarEstatisticas();
+                    }, 500);
+                });
+            });
+        }
+
+        function excluirPedido(id, btn) {
+            if (confirm("Deseja excluir este pedido?")) {
+                pedidosRef.child(id).remove();
+                btn.closest('.pedido')?.remove();
+            }
+        }
+
+        function excluirProduto(id) {
+            if (confirm("Deseja excluir este produto?")) {
+                produtosRef.child(id).remove()
+                    .then(() => {
+                        alert('Produto excluído com sucesso!');
+                    })
+                    .catch(err => {
+                        alert('Erro ao excluir produto: ' + err.message);
+                    });
+            }
+        }
+
+        function editarProduto(id) {
+  produtosRef.child(id).once('value', snapshot => {
+    const produto = snapshot.val();
+    if (produto) {
+      document.getElementById('nomeProduto').value = produto.nome || '';
+      document.getElementById('descricaoProduto').value = produto.descricao || '';
+      document.getElementById('categoriaProduto').value = produto.categoria || '';
+      
+      // CORREÇÃO: Verificar se os valores existem antes de converter
+      document.getElementById('precoProduto').value = produto.preco ? produto.preco.toString().replace('.', ',') : '';
+      document.getElementById('custoProduto').value = produto.custo ? produto.custo.toString().replace('.', ',') : '';
+      
+      // Preencher imagens
+      const imagensContainer = document.getElementById('imagensContainer');
+      imagensContainer.innerHTML = '';
+      (produto.imagens || []).forEach(imagem => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'imagemInput';
+        input.value = imagem;
+        imagensContainer.appendChild(input);
+      });
+      
+      // Preencher adicionais
+      const adicionaisContainer = document.getElementById('adicionaisContainer');
+      adicionaisContainer.innerHTML = '<h3>Adicionais</h3>';
+      (produto.adicionais || []).forEach(adicional => {
+        const div = document.createElement('div');
+        div.className = 'adicional';
+        div.innerHTML = `
+                    <input type="text" class="adicionalNome" value="${adicional.nome || ''}" placeholder="Nome do adicional" />
+                    <input type="text" class="adicionalValor" value="${adicional.valor ? adicional.valor.toString().replace('.', ',') : ''}" placeholder="Valor do adicional (ex: 1,50)" />
+                    <input type="text" class="adicionalLucro" value="${adicional.lucroAdicional ? adicional.lucroAdicional.toString().replace('.', ',') : ''}" placeholder="Lucro do adicional (ex: 0,50)" />
+                `;
+        adicionaisContainer.appendChild(div);
+      });
+      
+      // Alterar o evento de submit para atualizar o produto
+      formProduto.onsubmit = e => {
+        e.preventDefault();
+        atualizarProduto(id);
+      };
+    }
+  });
+}
+        function atualizarProduto(id) {
+            const nome = document.getElementById('nomeProduto').value.trim();
+            const descricao = document.getElementById('descricaoProduto').value.trim();
+            const categoria = document.getElementById('categoriaProduto').value;
+            const precoStr = document.getElementById('precoProduto').value.trim();
+            const custoStr = document.getElementById('custoProduto').value.trim();
+
+            const preco = parsePreco(precoStr);
+            const custo = parsePreco(custoStr);
+
+            const imagemInputs = document.querySelectorAll('.imagemInput');
+            const imagens = Array.from(imagemInputs)
+                .map(input => input.value.trim())
+                .filter(nome => nome);
+
+            const adicionalInputs = document.querySelectorAll('.adicional');
+            const adicionais = Array.from(adicionalInputs).map(adicional => {
+                const nome = adicional.querySelector('.adicionalNome').value.trim();
+                const valorStr = adicional.querySelector('.adicionalValor').value.trim();
+                const lucroAdicionalStr = adicional.querySelector('.adicionalLucro').value.trim();
+
+                return {
+                    nome,
+                    valor: parsePreco(valorStr),
+                    lucroAdicional: parsePreco(lucroAdicionalStr)
+                };
+            }).filter(adicional => adicional.nome);
+
+            if (!nome || isNaN(preco) || !categoria) {
+                alert("Preencha nome, preço e categoria corretamente.");
+                return;
+            }
+
+            produtosRef.child(id).update({ nome, descricao, categoria, preco, custo, imagens, adicionais })
+                .then(() => {
+                    formProduto.reset();
+                    alert('Produto atualizado com sucesso!');
+                    // Resetar o evento de submit para cadastrar um novo produto
+                    formProduto.onsubmit = e => {
+                        e.preventDefault();
+                        cadastrarProduto();
+                    };
+                })
+                .catch(err => alert("Erro ao atualizar produto: " + err.message));
+        }
+
+        function adicionarCampoImagem() {
+            const container = document.getElementById('imagensContainer');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'imagemInput';
+            input.placeholder = 'Nome da imagem (ex: produto1.jpg)';
+            container.appendChild(input);
+        }
+
+        function adicionarCampoAdicional() {
+            const container = document.getElementById('adicionaisContainer');
+            const div = document.createElement('div');
+            div.className = 'adicional';
+            div.innerHTML = `
+                <input type="text" class="adicionalNome" placeholder="Nome do adicional" />
+                <input type="text" class="adicionalValor" placeholder="Valor do adicional (ex: 1,50)" />
+                <input type="text" class="adicionalLucro" placeholder="Lucro do adicional (ex: 0,50)" />
+            `;
+            container.appendChild(div);
+        }
+
+        // Disponibilizar funções globalmente
+        window.adicionarCampoImagem = adicionarCampoImagem;
+        window.adicionarCampoAdicional = adicionarCampoAdicional;
+        window.resetarEstatisticas = resetarEstatisticas;
+        window.confirmarPedido = confirmarPedido;
+        window.marcarEntregue = marcarEntregue;
+        window.excluirPedido = excluirPedido;
+        window.excluirProduto = excluirProduto;
+        window.editarProduto = editarProduto;
+
+        // Ativar som com primeiro clique
+        document.body.addEventListener('click', () => {
+            const som = document.getElementById('somNotificacao');
+            if (som) {
+                som.play().catch(() => { }); // Toca e ignora erros
+            }
+        }, { once: true }); // Executa só uma vez
+    </script>
+
+    <script type="module">
+        // Configuração do Firebase para promoções com SDK modular
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, push, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD7zUsB44wc3DPEMJ3tMeB2WxPkhICxzpQ",
+            authDomain: "loja-31f80.firebaseapp.com",
+            databaseURL: "https://loja-31f80-default-rtdb.firebaseio.com",
+            projectId: "loja-31f80",
+            storageBucket: "loja-31f80.appspot.com",
+            messagingSenderId: "10287886567",
+            appId: "1:10287886567:web:80131c6086c573689cb242"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const promotionsRef = ref(database, 'promotions');
+
+        let promotions = [];
+
+        window.deletePromotion = deletePromotion;
+
+        function loadPromotions() {
+            onValue(promotionsRef, (snapshot) => {
+                promotions = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        promotions.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    promotions.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                }
+                renderPromotionsList();
+            });
+        }
+
+        function renderPromotionsList() {
+            const container = document.getElementById('promotionsList');
+
+            if (promotions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span>📝</span>
+                        <p>Nenhuma promoção cadastrada ainda.</p>
+                        <p>Use o formulário acima para adicionar sua primeira promoção!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = promotions.map(promo => `
+                <div class="promotion-item">
+                    <div class="promotion-info">
+                        <h4>${escapeHtml(promo.title)}</h4>
+                        <p>${escapeHtml(promo.description.substring(0, 120))}${promo.description.length > 120 ? '...' : ''}</p>
+                        <p><strong>Preço:</strong> ${escapeHtml(promo.price)}</p>
+                        <p><strong>Imagem:</strong> ${escapeHtml(promo.imageName)}</p>
+                        <p style="font-size: 12px; color: #999;">
+                            <strong>Criado em:</strong> ${new Date(promo.createdAt || Date.now()).toLocaleString('pt-BR')}
+                        </p>
+                    </div>
+                    <button class="btn btn-danger" onclick="deletePromotion('${promo.id}')">🗑️ Excluir</button>
+                </div>
+            `).join('');
+        }
+
+        function deletePromotion(promotionId) {
+            if (confirm('❓ Tem certeza que deseja excluir esta promoção?')) {
+                const promotionRef = ref(database, `promotions/${promotionId}`);
+                remove(promotionRef).then(() => {
+                    showNotification('✅ Promoção excluída com sucesso!', 'success');
+                }).catch((error) => {
+                    console.error('Erro ao excluir promoção:', error);
+                    showNotification('❌ Erro ao excluir promoção!', 'error');
+                });
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showNotification(message, type = 'info') {
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: bold;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+
+            const colors = {
+                success: '#48bb78',
+                error: '#f56565',
+                info: '#667eea',
+                warning: '#ed8936'
+            };
+
+            notification.style.backgroundColor = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        document.getElementById('promotionForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const price = document.getElementById('price').value.trim();
+            const imageName = document.getElementById('imageName').value.trim();
+
+            if (!title || !description || !price || !imageName) {
+                showNotification('❌ Todos os campos são obrigatórios!', 'error');
+                return;
+            }
+
+            if (title.length > 100) {
+                showNotification('❌ Título muito longo (máximo 100 caracteres)!', 'error');
+                return;
+            }
+
+            if (description.length > 500) {
+                showNotification('❌ Descrição muito longa (máximo 500 caracteres)!', 'error');
+                return;
+            }
+
+            if (price.length > 50) {
+                showNotification('❌ Campo preço muito longo (máximo 50 caracteres)!', 'error');
+                return;
+            }
+
+            const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+            const hasValidExtension = validImageExtensions.some(ext =>
+                imageName.toLowerCase().endsWith(ext)
+            );
+
+            if (!hasValidExtension) {
+                showNotification('❌ Nome da imagem deve ter extensão válida (.jpg, .png, .gif, .webp)!', 'error');
+                return;
+            }
+
+            const promotionData = {
+                title: title,
+                description: description,
+                price: price,
+                imageName: imageName,
+                createdAt: Date.now()
+            };
+
+            push(promotionsRef, promotionData).then(() => {
+                showNotification('✅ Promoção adicionada com sucesso!', 'success');
+                document.getElementById('promotionForm').reset();
+                document.getElementById('title').focus();
+            }).catch((error) => {
+                console.error('Erro ao adicionar promoção:', error);
+                showNotification('❌ Erro ao adicionar promoção. Tente novamente!', 'error');
+            });
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                const form = document.getElementById('promotionForm');
+                if (document.activeElement && form.contains(document.activeElement)) {
+                    e.preventDefault();
+                    form.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadPromotions();
+            document.getElementById('title').focus();
+        });
+    </script>
+</body>
+</html>

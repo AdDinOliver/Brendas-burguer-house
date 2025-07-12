@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+</head>
+<style>
+/* Importar fontes modernas */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: #f3f4f6;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+
+.login-container {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+  animation: fadeIn 0.6s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-container:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+  border-color: #6b7280;
+}
+
+.login-container h2 {
+  margin-bottom: 30px;
+  color: #1a1a1a;
+  font-size: 32px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 16px 20px;
+  margin: 10px 0;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.login-container input:focus {
+  border-color: #6b7280;
+  outline: none;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(107, 114, 128, 0.15);
+}
+
+.login-container input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 16px 20px;
+  background-color: #374151;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.login-container button:hover {
+  background-color: #1f2937;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(55, 65, 81, 0.25);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    padding: 30px 20px;
+    margin: 20px;
+    max-width: 350px;
+  }
+
+  .login-container h2 {
+    font-size: 26px;
+  }
+
+  .login-container input,
+  .login-container button {
+    font-size: 15px;
+    padding: 14px 16px;
+  }
+}
+</style>
+<body>
+  
+  <body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Seu email">
+    <input type="password" id="senha" placeholder="Sua senha">
+    <button id="login">Entrar</button>
+  </div>
+</body>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7zUsB44wc3DPEMJ3tMeB2WxPkhICxzpQ",
+      authDomain: "loja-31f80.firebaseapp.com",
+      projectId: "loja-31f80",
+      storageBucket: "loja-31f80.appspot.com",
+      messagingSenderId: "10287886567",
+      appId: "1:10287886567:web:80131c6086c573689cb242"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById("login").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      signInWithEmailAndPassword(auth, email, senha)
+        .then((userCredential) => {
+          window.location.href = "admin.html";
+        })
+        .catch((error) => {
+          alert("Erro ao logar: " + error.message);
+        });
+    });
+  </script>
+</body>
+</html>
